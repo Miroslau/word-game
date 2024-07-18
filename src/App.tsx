@@ -15,7 +15,6 @@ function App() {
   const [currentlevel, setCurrentLevel] = useState<number>(1);
   const [letters, setLetters] = useState<LetterType[]>([]);
   const [selectedLetters, setSelectedLetters] = useState<string[]>([]);
-  const [previewWord, setPreviewWord] = useState<string>('');
 
   const level: LevelType = gameLevels.levels.find(
     (level) => level.id === currentlevel
@@ -51,10 +50,8 @@ function App() {
         <GameBoard words={level.words} />
         <LetterController
           letters={letters}
-          previewWord={previewWord}
           selectedLetters={selectedLetters}
           setSelectedLetters={setSelectedLetters}
-          setPreviewWord={setPreviewWord}
           onWordSelected={checkWord}
         />
       </div>

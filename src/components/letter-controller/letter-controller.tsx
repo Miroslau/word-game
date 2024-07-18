@@ -4,18 +4,14 @@ import { LetterType } from '../../type/LetterType.ts';
 interface LetterControllerProps {
   letters: LetterType[];
   selectedLetters: string[];
-  previewWord: string;
   setSelectedLetters: (...args: any) => void;
-  setPreviewWord: (...args: any) => void;
   onWordSelected: (word: string) => void;
 }
 
 const LetterController: FC<LetterControllerProps> = ({
   letters,
   selectedLetters,
-  previewWord,
   setSelectedLetters,
-  setPreviewWord,
   onWordSelected
 }) => {
   const [dragging, setDragging] = useState<boolean>(false);
@@ -25,8 +21,6 @@ const LetterController: FC<LetterControllerProps> = ({
   const handleDragStart = (letter: LetterType) => {
     setSelectedLetters([letter.value]);
     setSelectedIndex([letter.id]);
-
-    setPreviewWord(letter.value);
     setDragging(true);
   };
 
@@ -35,17 +29,19 @@ const LetterController: FC<LetterControllerProps> = ({
     if (dragging && !selectedLettersIndex.includes(letter.id)) {
       setSelectedLetters([...selectedLetters, letter.value]);
       setSelectedIndex([...selectedLettersIndex, letter.id]);
-      setPreviewWord([...selectedLetters, letter.value].join(''));
+    }
+    if (dragging && letter.id === selectedLettersIndex[selectedLetters.length - 1 - 1]) {
+      setSelectedLetters((prevLetters: string) => prevLetters.slice(0, -1));
+      setSelectedIndex((prevIndexes) => prevIndexes.slice(0, -1));
     }
   };
 
   const handleDragEnd = () => {
     if (selectedLetters.length > 0) {
-      onWordSelected(previewWord);
+      onWordSelected([...selectedLetters].join(''));
     }
     setSelectedLetters([]);
     setSelectedIndex([]);
-    setPreviewWord('');
     setDragging(false);
   };
 
