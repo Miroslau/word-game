@@ -1,28 +1,78 @@
-import { FC } from 'react';
+import { FC, useState } from 'react';
+import { LetterType } from '../../type/LetterType.ts';
 
 interface LetterControllerProps {
-  letters: string[];
+  letters: LetterType[];
+  selectedLetters: string[];
+  previewWord: string;
+  setSelectedLetters: (...args: any) => void;
+  setPreviewWord: (...args: any) => void;
+  onWordSelected: (word: string) => void;
 }
 
-const LetterController: FC<LetterControllerProps> = ({ letters }) => {
+const LetterController: FC<LetterControllerProps> = ({
+  letters,
+  selectedLetters,
+  previewWord,
+  setSelectedLetters,
+  setPreviewWord,
+  onWordSelected
+}) => {
+  const [dragging, setDragging] = useState<boolean>(false);
+  const [selectedLettersIndex, setSelectedIndex] = useState<number[]>([]);
   const angle = 360 / letters.length;
+
+  const handleDragStart = (letter: LetterType) => {
+    setSelectedLetters([letter.value]);
+    setSelectedIndex([letter.id]);
+
+    setPreviewWord(letter.value);
+    setDragging(true);
+  };
+
+  const handleDragOver = (event: React.DragEvent, letter: LetterType) => {
+    event.preventDefault();
+    if (dragging && !selectedLettersIndex.includes(letter.id)) {
+      setSelectedLetters([...selectedLetters, letter.value]);
+      setSelectedIndex([...selectedLettersIndex, letter.id]);
+      setPreviewWord([...selectedLetters, letter.value].join(''));
+    }
+  };
+
+  const handleDragEnd = () => {
+    if (selectedLetters.length > 0) {
+      onWordSelected(previewWord);
+    }
+    setSelectedLetters([]);
+    setSelectedIndex([]);
+    setPreviewWord('');
+    setDragging(false);
+  };
 
   return (
     <div className="relative flex justify-center items-center mx-auto mt-8">
       <div className="relative w-48 h-48 rounded-full border-8 border-blue-500">
-        {letters.map((letter, index) => (
-          <div
-            key={index}
-            className="absolute uppercase w-12 h-12 bg-white text-black hover:bg-pink-500 hover:text-white transition duration-150 ease-out hover:ease-in rounded-full flex items-center justify-center cursor-pointer text-xl font-bold"
-            style={{
-              transform: `rotate(${index * angle}deg) translate(90px) rotate(-${index * angle}deg)`,
-              top: '40%',
-              left: '38%',
-              transformOrigin: '0 0'
-            }}>
-            {letter}
-          </div>
-        ))}
+        {letters.map((letter, index) => {
+          let classes = `absolute uppercase w-12 h-12 ${!selectedLettersIndex.includes(letter.id) ? ' bg-white' : 'bg-pink-500'} ${!selectedLettersIndex.includes(letter.id) ? ' text-black' : 'text-white'} hover:bg-pink-500 hover:text-white transition duration-150 ease-out hover:ease-in rounded-full flex items-center justify-center cursor-pointer text-xl font-bold`;
+
+          return (
+            <button
+              key={index}
+              className={classes}
+              style={{
+                transform: `rotate(${index * angle}deg) translate(90px) rotate(-${index * angle}deg)`,
+                top: '40%',
+                left: '38%',
+                transformOrigin: '0 0'
+              }}
+              draggable
+              onDragStart={handleDragStart.bind(this, letter)}
+              onDragOver={(event) => handleDragOver(event, letter)}
+              onDragEnd={handleDragEnd}>
+              {letter.value}
+            </button>
+          );
+        })}
       </div>
     </div>
   );
