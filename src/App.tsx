@@ -7,11 +7,7 @@ import getMinimalLettersSet from './utils/getMinimalLettersSet.ts';
 import { LetterType } from './type/LetterType.ts';
 import BoardType from './type/BoardType.ts';
 import { winValidation } from './utils/winValidation.ts';
-
-type LevelType = {
-  id: number;
-  words: string[];
-};
+import { LevelType } from './type/LevelType.ts';
 
 function App() {
   const [currentlevel, setCurrentLevel] = useState<number>(1);
@@ -109,7 +105,7 @@ function App() {
           title="Уровень"
           gameLevel={countLevel}
         />
-        <GameBoard board={board} />
+        <GameBoard board={board} level={level} />
         <LetterController
           letters={letters}
           selectedLetters={selectedLetters}
