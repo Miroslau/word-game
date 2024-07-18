@@ -1,21 +1,20 @@
 import { FC } from 'react';
+import BoardType from '../../type/BoardType.ts';
 
 interface GameBoardProps {
-  words: string[];
+  board: BoardType[];
 }
 
-const GameBoard: FC<GameBoardProps> = ({ words }) => {
-  const sortedWords = [...words].sort((a, b) => a.length - b.length);
-
+const GameBoard: FC<GameBoardProps> = ({ board }) => {
   return (
     <div className="mb-5 mt-5">
-      {sortedWords.map((word, index) => (
-        <div key={index} className="flex justify-center items-center gap-1">
-          {Array.from({ length: word.length }).map((_, cellindex) => (
+      {board.map((row) => (
+        <div key={row.value} className="flex justify-center items-center gap-1">
+          {row.letters.map((cell, cellIndex) => (
             <div
-              key={cellindex}
-              className="w-8 h-8 flex justify-center items-center bg-color-fern rounded-xl m-1">
-              <span className="text-white uppercase text-[20px] font-[700]">{word[cellindex]}</span>
+              key={cellIndex}
+              className={`w-8 h-8 flex justify-center items-center ${cell ? 'bg-color-fern' : 'bg-color-concrete'} rounded-xl m-1`}>
+              <span className="text-white uppercase text-[20px] font-[700]">{cell}</span>
             </div>
           ))}
         </div>

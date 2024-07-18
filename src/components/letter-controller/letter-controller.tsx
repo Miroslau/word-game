@@ -46,7 +46,7 @@ const LetterController: FC<LetterControllerProps> = ({
   };
 
   return (
-    <div className="relative flex justify-center items-center mx-auto mt-8">
+    <div className="relative flex justify-center items-center flex-col mx-auto mt-8">
       <div className="relative w-48 h-48 rounded-full border-8 border-blue-500">
         {letters.map((letter, index) => {
           let classes = `absolute uppercase w-12 h-12 ${!selectedLettersIndex.includes(letter.id) ? ' bg-white' : 'bg-pink-500'} ${!selectedLettersIndex.includes(letter.id) ? ' text-black' : 'text-white'} hover:bg-pink-500 hover:text-white transition duration-150 ease-out hover:ease-in rounded-full flex items-center justify-center cursor-pointer text-xl font-bold`;
