@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react';
 import Header from './components/header/header.tsx';
 import GameBoard from './components/game-board/game-board.tsx';
 import gameLevels from '../src/constants/levels/levels.json';
+import LetterController from './components/letter-controller/letter-controller.tsx';
 
 type LevelType = {
   id: number;
@@ -18,10 +19,8 @@ function App() {
   ) as LevelType;
 
   useEffect(() => {
-    const letters = level.words
-      .join('')
-      .split('')
-      .sort(() => Math.random() - 0.5);
+    const uniqueLetters = Array.from(new Set(level.words.join('')));
+    const letters = uniqueLetters.sort(() => Math.random() - 0.5);
     console.log(letters);
     setLetters(letters);
   }, [currentlevel]);
@@ -36,6 +35,7 @@ function App() {
           gameLevel={currentlevel}
         />
         <GameBoard words={level.words} />
+        <LetterController letters={letters} />
       </div>
     </main>
   );
