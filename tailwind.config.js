@@ -6,7 +6,8 @@ export default {
       colors: {
         'color-pickled': '#2B344B',
         'color-concrete': '#F2F2F2',
-        'color-fern': '#65BD65'
+        'color-fern': '#65BD65',
+        'color-fiord': '#3E4A68'
       }
     }
   },
