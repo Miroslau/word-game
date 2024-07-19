@@ -10,7 +10,7 @@ import GameBoard from '../game-board/game-board.tsx';
 import LetterController from '../letter-controller/letter-controller.tsx';
 
 const Game = () => {
-  const [currentlevel, setCurrentLevel] = useState<number>(1);
+  const [currentLevel, setCurrentLevel] = useState<number>(1);
   const [countLevel, setCount] = useState<number>(1);
   const [board, setBoard] = useState<BoardType[]>([]);
   const [letters, setLetters] = useState<LetterType[]>([]);
@@ -20,7 +20,7 @@ const Game = () => {
   const winner = winValidation(board);
 
   const level: LevelType = gameLevels.levels.find(
-    (level) => level.id === currentlevel
+    (level) => level.id === currentLevel
   ) as LevelType;
 
   const checkWord = (word: string) => {
@@ -48,11 +48,27 @@ const Game = () => {
   const changeLevel = () => {
     setCurrentLevel((prevState) => (prevState + 1 > 3 ? 1 : prevState + 1));
     setCount((prevState) => prevState + 1);
+    localStorage.removeItem('gameState');
+  };
+
+  const saveState = () => {
+    const state = {
+      currentLevel,
+      countLevel,
+      board,
+      letters
+    };
+    localStorage.setItem('gameState', JSON.stringify(state));
   };
 
   useEffect(() => {
-    if (currentlevel > 3) {
-      setCurrentLevel(1);
+    const savedState = localStorage.getItem('gameState');
+    if (savedState) {
+      const parsedState = JSON.parse(savedState);
+      setCurrentLevel(parsedState.currentLevel);
+      setCount(parsedState.countLevel);
+      setBoard(parsedState.board);
+      setLetters(parsedState.letters);
     } else {
       const letters = getMinimalLettersSet(level.words);
       setLetters(
@@ -71,10 +87,14 @@ const Game = () => {
           }))
       );
     }
-  }, [currentlevel]);
+  }, [currentLevel]);
 
   useEffect(() => {
-    console.log(board);
+    window.addEventListener('beforeunload', saveState);
+
+    return () => {
+      window.removeEventListener('beforeunload', saveState);
+    };
   }, [board]);
 
   if (winner) {
