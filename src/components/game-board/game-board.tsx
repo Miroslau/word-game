@@ -9,7 +9,7 @@ interface GameBoardProps {
 
 const GameBoard: FC<GameBoardProps> = ({ board, level }) => {
   return (
-    <div className="mb-5 mt-5">
+    <div className="mb-3 mt-5">
       {board.map((row) => (
         <div key={row.value} className="flex justify-center items-center gap-1">
           {row.letters.map((cell, cellIndex) => (
